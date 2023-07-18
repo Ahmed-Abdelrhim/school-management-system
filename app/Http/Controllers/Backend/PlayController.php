@@ -76,7 +76,7 @@ class PlayController extends Controller
         return response()->json(['status' => 200, 'message' => 'OK', 'data' => $request->get('email')]);
     }
 
-    public function playWithApiCreateUser()
+    public function playWithApiCreateUser(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         $uri = 'http://127.0.0.1:1050/api/create/users';
         $get_users = 'http://127.0.0.1:1050/api/get/users';
