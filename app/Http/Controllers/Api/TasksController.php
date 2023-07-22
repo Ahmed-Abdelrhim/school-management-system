@@ -3,16 +3,49 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\RegisterRequest;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TasksController extends Controller
 {
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => ['required' , 'string' ,'email' ,'max: 255'],
+            'password' => ['required' , 'string' ,'max: 255'],
+        ]);
+
+        if(!Auth::attempt($request->only(['email' , 'password'] ))) {
+            return response()->json(['message' => 'Credentials do not match' , 'data' => ''] , 401);
+        }
+
+        $user = User::query()->Firstwhere('email' , $request->email);
+
+        $token = $user->createToken('Api Token Of ' . $user->name)->plainTextToken;
+
+        return response()->json(['message' => 'Success Login' , 'token' => $token , 'data' => $user],200);
+    }
+
+
+    public function register(RegisterRequest $request)
+    {
+        $request->validated();
+        return response()->json(['message' => 'Success Register']);
+    }
+
+
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-
+        $posts = Post::query()->with('owner')->get();
+        return response()->json(['posts' => $posts]);
     }
 
     /**

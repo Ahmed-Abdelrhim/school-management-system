@@ -15,6 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // \App\Models\User::factory(40)->create();
         // \App\Models\Designation::factory(7)->create();
-        $this->call(LoginSeeder::class);
+        // $this->call(LoginSeeder::class);
+
+
+        \App\Models\Video::factory(50)->create();
+
     }
 }

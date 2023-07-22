@@ -6,6 +6,7 @@ use App\Models\Scopes\PostScope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Spatie\Sluggable\HasSlug;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use PhpParser\Node\Expr\FuncCall;
-
+use App\Models\Comment;
 class Post extends Model
 {
     use  HasSlug, Prunable, SoftDeletes, PostScope;
@@ -51,4 +52,10 @@ class Post extends Model
     {
         return $this->tags->isNotEmpty();
     }
+
+    public function comments(): MorphMany
+    {
+        return $this->morphMany(Comment::class,'commentable');
+    }
+
 }
