@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class TasksController extends Controller
 {
@@ -37,9 +38,16 @@ class TasksController extends Controller
         $request->validated();
         if ($request->has('image')) {
             if ($request->image !== null) {
+                $img = Image::make($request->file('image'));
+                $img->resize(300,null,function ($ration) {
+                    $ration->aspectRatio();
+                });
+                // $img->save(storage_path('images'),50,'png');
+                $img->save('images/bar.png');
 
             }
         }
+        return response()->json(['message' => 'Success Register']);
         $user = User::query()->create([
             'name' => $request->name,
             'email' => $request->email,
@@ -48,7 +56,7 @@ class TasksController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return response()->json(['message' => 'Success Register']);
+
     }
 
 
