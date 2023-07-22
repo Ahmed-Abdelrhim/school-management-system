@@ -182,6 +182,7 @@ return [
         Yajra\DataTables\DataTablesServiceProvider::class,
 
         Post\Providers\AppServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
     ],
 
     /*
@@ -237,7 +238,6 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'Debugbar' => Barryvdh\Debugbar\Facades\Debugbar::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-
     ],
 
 ];
