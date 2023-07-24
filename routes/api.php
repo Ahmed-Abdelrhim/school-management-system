@@ -28,7 +28,14 @@ Route::post('register',[TasksController::class,'register']);
 
 
 // Protected Routes···
-Route::get('posts',[TasksController::class,'index']);
+Route::group(['middleware' => 'auth:sanctum'] , function() {
+    Route::get('posts',[TasksController::class,'index']);
+    Route::post('post/comment/{post}',[TasksController::class,'store']);
+
+
+});
+
+
 
 
 

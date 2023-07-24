@@ -67,13 +67,25 @@ class TasksController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $post_id)
     {
-        $post  = Post::query()->find(1);
-        $post->comments->create([
-            'body' => '',
-            'created_at' => Carbon::now();
+        $post  = Post::query()->find($post_id);
+        if(!$post) {
+            return response()->json(['status' => 'Post was not found'],404);
+        }
+
+        $request->validate([
+            'body' => ['required','string','max:255'],
         ]);
+
+        $postComment = $post->comments()->create([
+            'body' => $request->get('body'),
+            'created_at' => Carbon::now()
+        ]);
+        if (!$postComment){
+            return response()->json(['status' => 'Error has occurred...' , 'data' => ''],422);
+        }
+        return response()->json(['status' => 'Success Transaction' , 'data' => $postComment],200);
     }
 
     /**

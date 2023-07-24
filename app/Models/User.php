@@ -12,19 +12,14 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Designation;
 
-
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-
-
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use InteractsWithMedia;
+    // use InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
