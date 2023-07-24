@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RegisterRequest;
+use App\Http\Requests\TaskUpdateRequest;
 use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
 use App\Models\Post;
 use App\Models\User;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +18,11 @@ use Intervention\Image\Facades\Image;
 
 class TasksController extends Controller
 {
+    private TaskService $taskService;
+    public function __construct(TaskService $taskService)
+    {
+        $this->taskService = $taskService;
+    }
 
     public function login(Request $request)
     {
@@ -45,9 +52,7 @@ class TasksController extends Controller
                 $img->resize(300,null,function ($ration) {
                     $ration->aspectRatio();
                 });
-                // $img->save(storage_path('images'),50,'png');
                 $img->save('images/bar.png');
-
             }
         }
         $user = User::query()->create([
@@ -58,17 +63,12 @@ class TasksController extends Controller
             'password' => Hash::make($request->password),
         ]);
     }
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $posts = Post::query()->with('owner')->get();
         return response()->json(['posts' => $posts]);
     }
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request, $post_id)
     {
         $post  = Post::query()->find($post_id);
@@ -87,41 +87,27 @@ class TasksController extends Controller
         if (!$postComment){
             return response()->json(['status' => 'Error has occurred...' , 'data' => ''],422);
         }
-
-
         return response()->json(['status' => 'Success Transaction' , 'data' => $postComment],200);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $post  = Post::query()->with('comments')->find($id);
         if(!$post) {
             return response()->json(['status' => 'Post was not found'],404);
         }
-
-        $singlePost = new TaskResource($post);
-
-
-        // $posts = Post::query()->with('comments')->limit(10)->get();
-        // $resource = new TaskCollection($posts);
-        return response()->json(['data' => $singlePost ,'status' => 'Success'] , 200);
+        $postResource = new TaskResource($post);
+        return response()->json(['data' => $postResource ,'status' => 'Success'] , 200);
     }
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(TaskUpdateRequest $request, string $id)
     {
-        //
+        $post  = Post::query()->find($id);
+        if(!$post) {
+            return response()->json(['status' => 'Post was not found'],404);
+        }
+        $request->validated();
+       $updatedPost = $this->taskService->update($request, $post);
+        return response()->json(['status' => 'Post Updated Successfully' , 'data' => $updatedPost],200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }
