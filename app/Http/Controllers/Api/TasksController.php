@@ -93,17 +93,12 @@ class TasksController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post  = Post::query()->with('comments')->find($id);
+        if(!$post) {
+            return response()->json(['status' => 'Post was not found'],404);
+        }
+        return response()->json(['data' => $post ,'status' => 'Success'] , 200);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
