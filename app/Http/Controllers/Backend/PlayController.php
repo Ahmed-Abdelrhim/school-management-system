@@ -132,12 +132,12 @@ class PlayController extends Controller
         }
 
         $tag->restore();
-        return 'Tag Restored Successfully';
+        return 'Tag Restored Successfully';// search and send me the feedback
 
         */
 
         // $users = User::find(1);
-        //dd($users);
+        // dd($users);
         // here
 
         //        Notification::route('mail',[
@@ -154,3 +154,6 @@ class PlayController extends Controller
     }
     // "vue-template-compiler": "^2.6.11";
 }
+//auth/Student/Subscription/DefaultAdminCreation
+// default.admin.@mail.com
+// maryam.ibrahim  => maryam.ibrahim@gmail.com (phone number 01002305045) [password => ]
