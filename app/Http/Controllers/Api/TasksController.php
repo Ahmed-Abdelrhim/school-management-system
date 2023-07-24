@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RegisterRequest;
+use App\Http\Resources\TaskCollection;
+use App\Http\Resources\TaskResource;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -85,6 +87,8 @@ class TasksController extends Controller
         if (!$postComment){
             return response()->json(['status' => 'Error has occurred...' , 'data' => ''],422);
         }
+
+
         return response()->json(['status' => 'Success Transaction' , 'data' => $postComment],200);
     }
 
@@ -97,7 +101,13 @@ class TasksController extends Controller
         if(!$post) {
             return response()->json(['status' => 'Post was not found'],404);
         }
-        return response()->json(['data' => $post ,'status' => 'Success'] , 200);
+
+        $singlePost = new TaskResource($post);
+
+
+        // $posts = Post::query()->with('comments')->limit(10)->get();
+        // $resource = new TaskCollection($posts);
+        return response()->json(['data' => $singlePost ,'status' => 'Success'] , 200);
     }
     /**
      * Update the specified resource in storage.
