@@ -10,6 +10,7 @@ use App\Http\Resources\TaskResource;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\TaskService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -43,33 +44,19 @@ class TasksController extends Controller
     }
 
 
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         $request->validated();
-        if ($request->has('image')) {
-            if ($request->image !== null) {
-                $img = Image::make($request->file('image'));
-                $img->resize(300,null,function ($ration) {
-                    $ration->aspectRatio();
-                });
-                $img->save('images/bar.png');
-            }
-        }
-        $user = User::query()->create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'gender' => $request->gender,
-            'religion' => $request->religion,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = $this->taskService->registerUser($request);
+        return response()->json(['status' => 'User Created Successfully' , 'data' => $user],200);
     }
-    public function index()
+    public function index(): JsonResponse
     {
         $posts = Post::query()->with('owner')->get();
         return response()->json(['posts' => $posts]);
     }
 
-    public function store(Request $request, $post_id)
+    public function store(Request $request, $post_id): JsonResponse
     {
         $post  = Post::query()->find($post_id);
         if(!$post) {
@@ -90,7 +77,7 @@ class TasksController extends Controller
         return response()->json(['status' => 'Success Transaction' , 'data' => $postComment],200);
     }
 
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         $post  = Post::query()->with('comments')->find($id);
         if(!$post) {
@@ -99,15 +86,25 @@ class TasksController extends Controller
         $postResource = new TaskResource($post);
         return response()->json(['data' => $postResource ,'status' => 'Success'] , 200);
     }
-    public function update(TaskUpdateRequest $request, string $id)
+    public function update(TaskUpdateRequest $request, $post_id): JsonResponse
     {
-        $post  = Post::query()->find($id);
-        if(!$post) {
+        $post = $this->taskService->findPostById($post_id);
+        if ($post === false) {
             return response()->json(['status' => 'Post was not found'],404);
         }
         $request->validated();
-       $updatedPost = $this->taskService->update($request, $post);
+        $updatedPost = $this->taskService->update($request, $post);
         return response()->json(['status' => 'Post Updated Successfully' , 'data' => $updatedPost],200);
+    }
+
+    public function destroy($post_id): JsonResponse
+    {
+        $post = $this->taskService->findPostById($post_id);
+        if ($post === false) {
+            return response()->json(['status' => 'Post was not found'],404);
+        }
+        $post->delete();
+        return response()->json(['status' => 'Post Updated Successfully' , 'data' => $post],200);
     }
 
 }

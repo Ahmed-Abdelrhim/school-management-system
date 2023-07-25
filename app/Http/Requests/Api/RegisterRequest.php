@@ -29,7 +29,7 @@ class RegisterRequest extends FormRequest
             'email' => ['required' , 'string' ,'email' ,'max: 255'],
             'mobile' => ['required' , 'numeric' ,'regex:/(01)[0-9]{9}/'],
             'gender' => ['required' , Rule::in($this->genders) ],
-            'image' => ['nullable'],
+            'image' => ['nullable' ,'image' ,'mimes:jpeg,png,jpg' ,'size:3072'],
             'religion' => ['nullable' , 'string' , 'max:255' , "min:6"],
             'password' => ['required' , 'string' ,'max: 255'],
         ];
