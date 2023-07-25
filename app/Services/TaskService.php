@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Carbon\Carbon;
+
 class TaskService
 {
     public function update($request , $post)
@@ -12,6 +14,7 @@ class TaskService
         $data['description'] = $request->get('description');
         $data['min_to_read'] = $request->get('min_to_read');
         $data['is_published'] = $request->get('is_published');
+        $data['updated_at'] = Carbon::now();
         return $post->update($data);
     }
 }

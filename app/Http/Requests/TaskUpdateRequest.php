@@ -22,12 +22,12 @@ class TaskUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['nullable','string','min:6' ,'max:255'],
-            'slug' => ['nullable','string','max:255'],
-            'excerpt' => ['nullable','string','max:255'],
-            'description' => ['nullable','string','max:255'],
-            'min_to_read' => ['nullable', 'numeric'],
-            'is_published' => ['nullable', 'numeric' ,'between:0,1'],
+            'title'        => ['required','string','min:6' ,'max:255'],
+            'slug'         => ['required','string','max:255'],
+            'excerpt'      => ['required','string','max:255'],
+            'description'  => ['required','string','max:255'],
+            'min_to_read'  => ['required', 'numeric'],
+            'is_published' => ['required', 'numeric' ,'between:0,1'],
         ];
     }
 }
