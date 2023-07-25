@@ -110,5 +110,10 @@ class TasksController extends Controller
         $post->delete();
         return response()->json(['status' => 'Post Updated Successfully' , 'data' => $post],200);
     }
+    public function logout(): JsonResponse
+    {
+        Auth::user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'You have been successfully logged out and your token has been deleted'],200);
+    }
 
 }
