@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\RegisterRequest;
 use App\Http\Requests\TaskUpdateRequest;
+use App\Http\Resources\PostCollection;
 use App\Http\Resources\TaskCollection;
 use App\Http\Resources\TaskResource;
+use App\Http\Resources\UserResource;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\TaskService;
@@ -48,12 +50,14 @@ class TasksController extends Controller
     {
         $request->validated();
         $user = $this->taskService->registerUser($request);
-        return response()->json(['status' => 'User Created Successfully' , 'data' => $user],200);
+        $userResource = new UserResource($user);
+        return response()->json(['status' => 'User Created Successfully' , 'data' => $userResource],200);
     }
     public function index(): JsonResponse
     {
         $posts = Post::query()->with('owner')->get();
-        return response()->json(['posts' => $posts]);
+        $postsCollection = PostCollection::collection($posts);
+        return response()->json(['status' => 'Success Transaction','data' => $postsCollection],200);
     }
 
     public function store(Request $request, $post_id): JsonResponse
