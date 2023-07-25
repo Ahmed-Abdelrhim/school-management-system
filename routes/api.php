@@ -1,15 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\RedisController;
 use App\Http\Controllers\Api\TasksController;
-use App\Http\Controllers\BackEnd\PlayController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 // Public Routes···
 Route::post('login',[TasksController::class,'login']);
 Route::post('register',[TasksController::class,'register']);
-
 
 
 // Protected Routes···
