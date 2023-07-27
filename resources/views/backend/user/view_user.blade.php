@@ -3,7 +3,7 @@
 
     <div class="content-wrapper">
         <div class="container-full">
-            <!-- Content Header (Page header) -->
+            <!-- Content Header (Page header)d -->
 
 
             <!-- Main content -->
